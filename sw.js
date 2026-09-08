@@ -1,5 +1,5 @@
-const CACHE = 'neonbox-shell-v2';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
+const CACHE = 'neonbox-shell-v3';
+const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
 });
@@ -18,7 +18,7 @@ self.addEventListener('fetch', event => {
     return;
   }
   event.respondWith(caches.match(request).then(cached => cached || fetch(request).then(response => {
-    if (response.ok && url.origin === self.location.origin) caches.open(CACHE).then(cache => cache.put(request, response.clone()));
+    if (response.ok || url.origin === 'https://cdn.jsdelivr.net') caches.open(CACHE).then(cache => cache.put(request, response.clone()));
     return response;
   }).catch(() => caches.match('./index.html'))));
 });
